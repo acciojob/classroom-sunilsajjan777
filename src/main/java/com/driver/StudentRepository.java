@@ -19,6 +19,7 @@ public class StudentRepository {
         studentdb.put(student.getName(),student);
     }
     public void addTeacher(Teacher teacher){
+
         teacherDb.put(teacher.getName(),teacher);
     }
 

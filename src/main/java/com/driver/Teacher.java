@@ -4,6 +4,9 @@ public class Teacher {
     private String name;
     private int numberOfStudents;
     private int age;
+    public Teacher() {
+
+    }
 
     public String getName() {
         return name;
@@ -23,7 +26,5 @@ public class Teacher {
     public void setAge(int age) {
         this.age = age;
     }
-    public Teacher() {
 
-    }
 }
