@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Repository
-@Component
+//@Component
 public class StudentRepository {
 
     static HashMap<String,Student> studentdb =new HashMap<>();
