@@ -49,8 +49,8 @@ public class StudentRepository {
     {
         List<String> students=new ArrayList<>();
 
-        for (String student :studentdb.keySet() ){
-            students.add(student);
+        for (Student student :studentdb.values() ){
+            students.add(student.getName());
         }
         return students;
     }
@@ -58,17 +58,18 @@ public class StudentRepository {
     public static void deleteTeacherByName(String teacher){
 
         teacherDb.remove(teacher);
-        List<String> students= new ArrayList<>();
+        List<Student> students= new ArrayList<>();
 
         for (Student s: studentTeacherDb.keySet())
             if (studentTeacherDb.get(s).getName().equals(teacher))
             {
-                students.add(s.getName());
-                studentTeacherDb.remove(s);
+                students.add(s);
+
             }
 
-        for (String s:students){
-            studentdb.remove(s);
+        for (Student s:students){
+            studentdb.remove(s.getName());
+            studentTeacherDb.remove(s);
         }
 
     }
