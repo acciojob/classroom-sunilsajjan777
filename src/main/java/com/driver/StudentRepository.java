@@ -1,6 +1,5 @@
 package com.driver;
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -8,80 +7,81 @@ import java.util.HashMap;
 import java.util.List;
 
 @Repository
-//@Component
-public class StudentRepository {
+public class StudentRepository
+{
+    HashMap<String, Student> studentDb = new HashMap<>();
+    HashMap<String, Teacher> teacherDb = new HashMap<>();
 
-    static HashMap<String,Student> studentdb =new HashMap<>();
-    static HashMap<String,Teacher> teacherDb=new HashMap<>();
-    static HashMap<Student,Teacher> studentTeacherDb =new HashMap<>();
+    HashMap<String, List<String>> teacherStudentDb = new HashMap<>();
+    // HashMap<String, String > studentTeacherJoin = new HashMap<>();
 
-    public void addStudent(Student student){
-        studentdb.put(student.getName(),student);
+
+    public void addStudent (Student student) {studentDb.put(student.getName(), student); }
+
+    /**
+     * @param teacher
+     */
+    public void addTeacher(Teacher teacher) {teacherDb.put(teacher.getName(), teacher);}
+
+    public void addStudentTeacherPair (String studentName, String teacherName)
+    {
+        List<String> studentCombination = new ArrayList<>();
+
+        if (studentDb.containsKey(studentName) && teacherDb.containsKey(teacherName))
+        {
+            if (teacherStudentDb.containsKey(teacherName)) studentCombination = teacherStudentDb.get(teacherName);
+            studentCombination.add(studentName);
+
+            teacherStudentDb.put(teacherName,studentCombination);
+
+            //For particular Teacher, how many student he is teaching
+            Teacher t = teacherDb.get(teacherName);
+            t.setNumberOfStudents(studentCombination.size());
+        }
     }
-    public void addTeacher(Teacher teacher){
 
-        teacherDb.put(teacher.getName(),teacher);
+
+    public Student getStudentByName(String name)
+    {
+        return studentDb.get(name);
     }
 
-    public void addStudentTeacherPair(String student,String teacher){
-        studentTeacherDb.put(studentdb.get(student),teacherDb.get(teacher));
-    }
-
-    public Student getStudentByName(String name){
-       return studentdb.get(name);
-    }
-    public Teacher getTeacherByName(String name){
+    public Teacher getTeacherByName(String name)
+    {
         return teacherDb.get(name);
     }
 
 
-    public List<String> getStudentsByTeacherName(String name){
-
-        List<String> listOfStudents = new ArrayList<>();
-        for(Student s: studentTeacherDb.keySet()){
-            if(studentTeacherDb.get(s).getName().equals(name))
-                listOfStudents.add(s.getName());
-        }
-        return listOfStudents;
-    }
-
-    public List<String> getAllStudents()
+    public List<String> getStudentsByTeacherName(String teacherName)
     {
-        List<String> students=new ArrayList<>();
-
-        for (Student student :studentdb.values() ){
-            students.add(student.getName());
-        }
-        return students;
+        List<String> studentList = new ArrayList<>();
+        if (teacherStudentDb.containsKey(teacherName)) studentList = teacherStudentDb.get(teacherName);
+        return studentList;
     }
 
-    public static void deleteTeacherByName(String teacher){
+    public List<String> getAllStudent() {return new ArrayList<>(studentDb.keySet());}
 
-        teacherDb.remove(teacher);
-        List<Student> students= new ArrayList<>();
 
-        for (Student s: studentTeacherDb.keySet())
-            if (studentTeacherDb.get(s).getName().equals(teacher))
+    public void deleteTeacherByName(String teacher)
+    {
+        if (teacherStudentDb.containsKey(teacher) && teacherDb.containsKey(teacher))
+        {
+            for (String sname: teacherStudentDb.get(teacher))  studentDb.remove(sname);
+            teacherStudentDb.remove(teacher);
+        }
+    }
+
+    public void deleteAllTeachers()
+    {
+        for(String tname : teacherDb.keySet())
+        {
+            if (teacherStudentDb.containsKey(tname))
             {
-                students.add(s);
-
+                for (String sname: teacherStudentDb.get(tname))  studentDb.remove(sname);
+                teacherStudentDb.remove(tname);
             }
 
-        for (Student s:students){
-            studentdb.remove(s.getName());
-            studentTeacherDb.remove(s);
+            else  teacherDb.remove(tname);
         }
-
-    }
-
-    public void deleteAllTeachers(){
-
-        for(Student s: studentTeacherDb.keySet()){
-            studentdb.remove(s.getName());
-        }
-
-        teacherDb.clear();
-        studentTeacherDb.clear();
-
     }
 }
