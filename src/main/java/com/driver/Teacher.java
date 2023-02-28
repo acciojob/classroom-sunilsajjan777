@@ -7,9 +7,10 @@ public class Teacher {
     public Teacher() {
 
     }
-    public Teacher(String name, int age) {
+    public Teacher(String name, int age,int numberOfStudents) {
         this.name = name;
         this.age=age;
+        this.numberOfStudents=numberOfStudents;
     }
 
     public String getName() {
