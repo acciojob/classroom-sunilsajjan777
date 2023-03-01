@@ -21,7 +21,9 @@ public class StudentRepository
     /**
      * @param teacher
      */
-    public void addTeacher(Teacher teacher) {teacherDb.put(teacher.getName(), teacher);}
+    public void addTeacher(Teacher teacher)
+    {
+        teacherDb.put(teacher.getName(), teacher);}
 
     public void addStudentTeacherPair (String studentName, String teacherName)
     {
@@ -29,7 +31,8 @@ public class StudentRepository
 
         if (studentDb.containsKey(studentName) && teacherDb.containsKey(teacherName))
         {
-            if (teacherStudentDb.containsKey(teacherName)) studentCombination = teacherStudentDb.get(teacherName);
+            if (teacherStudentDb.containsKey(teacherName))
+                studentCombination = teacherStudentDb.get(teacherName);
             studentCombination.add(studentName);
 
             teacherStudentDb.put(teacherName,studentCombination);
@@ -55,7 +58,8 @@ public class StudentRepository
     public List<String> getStudentsByTeacherName(String teacherName)
     {
         List<String> studentList = new ArrayList<>();
-        if (teacherStudentDb.containsKey(teacherName)) studentList = teacherStudentDb.get(teacherName);
+        if (teacherStudentDb.containsKey(teacherName))
+            studentList = teacherStudentDb.get(teacherName);
         return studentList;
     }
 
@@ -66,9 +70,12 @@ public class StudentRepository
     {
         if (teacherStudentDb.containsKey(teacher) && teacherDb.containsKey(teacher))
         {
-            for (String sname: teacherStudentDb.get(teacher))  studentDb.remove(sname);
+            for (String sname: teacherStudentDb.get(teacher))
+                studentDb.remove(sname);
+
             teacherStudentDb.remove(teacher);
         }
+        teacherDb.remove(teacher);
     }
 
     public void deleteAllTeachers()
@@ -77,8 +84,13 @@ public class StudentRepository
         {
             if (teacherStudentDb.containsKey(tname))
             {
-                for (String sname: teacherStudentDb.get(tname))  studentDb.remove(sname);
+                List<String> students =new ArrayList<>();
+                students =teacherStudentDb.get(tname);
+                for (String sname:students )
+                    studentDb.remove(sname);
+
                 teacherStudentDb.remove(tname);
+                teacherDb.remove(tname);
             }
 
             else  teacherDb.remove(tname);
